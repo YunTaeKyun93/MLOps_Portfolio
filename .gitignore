@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data (큰 파일 제외)
+*.csv
+!train.csv  # train.csv는 포함
+
+# Conda
+.conda/
+EOF
