@@ -318,24 +318,6 @@ plt.savefig(save_path)
 
 ---
 
-### 오늘 전체 회고
-
-**잘한 것:**
-
-1. Chained Assignment 문제 직접 발견 & 해결
-2. get_dummies vs OneHotEncoder 차이 파악
-3. 비율표 직접 찾아서 정리
-
-**아쉬운 것:**
-
-1. matplotlib 아직 처음부터 못 씀
-2. 실습 속도가 예상보다 느렸음
-
-**내일 할 것:**
-
-- [ ] Day 4: 모델 학습 및 평가
-- [ ] 파일 저장 경로 수정 (savefig 부분)
-
 ```
 
 ```

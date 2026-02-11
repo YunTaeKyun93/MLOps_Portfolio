@@ -9,7 +9,7 @@
 | 항목   | 내용                                          |
 | ------ | --------------------------------------------- |
 | 포지션 | AI 스타트업 백엔드 개발자 (ML 서빙 경험 보유) |
-| 기간   | 12주 (2025.XX.XX ~ 2025.XX.XX)                |
+| 기간   | 12주 (2026.02.06 ~ 2025.06.08)                |
 | 전략   | 백엔드 40% + 인프라 40% + ML 기초 20%         |
 | 현재   | Nest.js 백엔드, JavaScript 풀스택             |
 
@@ -217,6 +217,8 @@ Day 3: Add class imbalance visualization
 
 ## 데이터 준비
 
+예시
+
 ```bash
 # Kaggle CLI로 다운로드
 kaggle competitions download -c titanic
@@ -230,9 +232,9 @@ ___
 
 | 날짜       | 내용                                        |
 | ---------- | ------------------------------------------- |
-| 2025.XX.XX | 프로젝트 시작                               |
-| 2025.XX.XX | Day 1-2 완료 (환경 설정, PyTorch 기초)      |
-| 2025.XX.XX | Day 3 완료 (데이터 전처리, Class Imbalance) |
+| 2026.02.09 | 프로젝트 시작                               |
+| 2025.02.10 | Day 1-2 완료 (환경 설정, PyTorch 기초)      |
+| 2026.02.11 | Day 3 완료 (데이터 전처리, Class Imbalance) |
 
 ---
 
@@ -240,5 +242,5 @@ ___
 
 ---
 
-**Last Updated**: 2025.XX.XX | **Current**: Week 1 - Day 3 완료
+**Last Updated**: 2026.02.11 | **Current**: Week 1 - Day 3 완료
 ```

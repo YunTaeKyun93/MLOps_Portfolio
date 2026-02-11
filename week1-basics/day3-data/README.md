@@ -44,12 +44,12 @@ Class Imbalance = 트래픽 편중 문제
 ### 실습 1: CSV 데이터 읽기 및 기본 탐색
 
 - [x] `pandas_basic.py` 파일 생성
-- [ ] CSV 파일 읽기 (`pd.read_csv()`)
-- [ ] 데이터 크기 확인 (`df.shape`)
-- [ ] 컬럼 정보 확인 (`df.info()`)
-- [ ] 처음 5개 행 보기 (`df.head()`)
-- [ ] 통계 정보 확인 (`df.describe()`)
-- [ ] 결측치 확인 (`df.isnull().sum()`)
+- [x ] CSV 파일 읽기 (`pd.read_csv()`)
+- [x ] 데이터 크기 확인 (`df.shape`)
+- [x ] 컬럼 정보 확인 (`df.info()`)
+- [x ] 처음 5개 행 보기 (`df.head()`)
+- [x ] 통계 정보 확인 (`df.describe()`)
+- [x] 결측치 확인 (`df.isnull().sum()`)
 
 ### 실행 결과
 
@@ -64,16 +64,16 @@ Class Imbalance = 트래픽 편중 문제
 
 ### 실습 2: 데이터 전처리 (결측치, 정규화)
 
-- [ ] `preprocessing.py` 파일 생성
-- [ ] 결측치 처리
-  - [ ] 수치형: 평균값으로 채우기 (`fillna()`)
-  - [ ] 범주형: 최빈값으로 채우기
-  - [ ] 불필요한 컬럼 삭제 (`drop()`)
-- [ ] 범주형 → 수치형 변환
-  - [ ] One-Hot Encoding (`pd.get_dummies()`)
-- [ ] 정규화
-  - [ ] StandardScaler 사용
-- [ ] 전처리된 데이터 저장
+- [x] `preprocessing.py` 파일 생성
+- [x] 결측치 처리
+  - [x] 수치형: 평균값으로 채우기 (`fillna()`)
+  - [x] 범주형: 최빈값으로 채우기
+  - [x] 불필요한 컬럼 삭제 (`drop()`)
+- [x] 범주형 → 수치형 변환
+  - [x] One-Hot Encoding (`pd.get_dummies()`)
+- [x] 정규화
+  - [x] StandardScaler 사용
+- [x] 전처리된 데이터 저장
 
 ### 실행 결과
 
@@ -89,12 +89,12 @@ Class Imbalance = 트래픽 편중 문제
 
 ### 실습 3: Class Imbalance 확인 및 시각화
 
-- [ ] `class_imbalance.py` 파일 생성
-- [ ] 타겟 분포 확인 (`value_counts()`)
-- [ ] 비율 확인 (`value_counts(normalize=True)`)
-- [ ] 막대 그래프 시각화 (`matplotlib`)
-- [ ] Imbalance Ratio 계산
-- [ ] 그래프 저장 (`class_distribution.png`)
+- [x] `class_imbalance.py` 파일 생성
+- [x] 타겟 분포 확인 (`value_counts()`)
+- [x] 비율 확인 (`value_counts(normalize=True)`)
+- [x] 막대 그래프 시각화 (`matplotlib`)
+- [x] Imbalance Ratio 계산
+- [x] 그래프 저장 (`class_distribution.png`)
 
 ### 실행 결과
 
@@ -114,15 +114,17 @@ Class Imbalance = 트래픽 편중 문제
 
 ### 생성된 파일
 
-- [ ] `pandas_basic.py`: 데이터 탐색
-- [ ] `preprocessing.py`: 전처리
-- [ ] `class_imbalance.py`: 불균형 체크
-- [ ] `train_preprocessed.csv`: 전처리된 데이터
-- [ ] `class_distribution.png`: 시각화 결과
+- [x] `pandas_basic.py`: 데이터 탐색
+- [x] `preprocessing.py`: 전처리
+- [x] `class_imbalance.py`: 불균형 체크
+- [x] `train_preprocessed.csv`: 전처리된 데이터
+- [x] `class_distribution.png`: 시각화 결과
 
-### 스크린샷
+###
 
 ## (실습 후 추가)
+
+outputs에 추가 함
 
 ```
 class_distribution.png
@@ -132,56 +134,28 @@ class_distribution.png
 
 ---
 
-## 🤔 오늘의 회고
+### 오늘 전체 회고
 
-### 배운 것 (3가지)
+**잘한 것:**
 
-1. (실습 후 작성)
-2. (실습 후 작성)
-3. (실습 후 작성)
+1. Chained Assignment 문제 직접 발견 & 해결
+2. get_dummies vs OneHotEncoder 차이 파악
+3. 비율표 직접 찾아서 정리
 
-### 백엔드 개발자 관점에서 연결된 것
+**아쉬운 것:**
 
-1. (실습 후 작성)
-2. (실습 후 작성)
-
-### 막혔던 부분
-
-1. (실습 후 작성)
-   - 해결 방법: (실습 후 작성)
-
-### 내일 보완할 것
-
-1. (실습 후 작성)
-
----
-
-## ⏱️ 시간 기록
-
-- **강의 시청**: **시간 **분
-- **실습**: **시간 **분
-- **회고 작성**: \_\_분
-- **총 소요**: **시간 **분
-
----
+1. matplotlib 아직 처음부터 못 씀
+2. 실습 속도가 예상보다 느렸음
 
 ## 💬 Claude에게 질문
 
 ### 질문 1
 
-(실습 중 막힌 부분이나 궁금한 점을 여기에 작성하세요!)
+오늘은 따로 없었고, 파일 구조화나 지금 템플릿을 많이 변경했는데, 이에 대한 조언
 
 ### 질문 2
 
-(추가 질문)
-
----
-
-## 🔗 참고 자료
-
-- [pandas 공식 문서](https://pandas.pydata.org/docs/)
-- [scikit-learn Preprocessing](https://scikit-learn.org/stable/modules/preprocessing.html)
-- [Kaggle Titanic Dataset](https://www.kaggle.com/c/titanic)
+단순히 int bool으로도 생각할게 많았고, 더 공부할수 있게되어서 좋았다
 
 ---
 
@@ -193,6 +167,6 @@ class_distribution.png
 
 ---
 
-**Last Updated**: 2024.XX.XX
+**Last Updated**: 2026.02.12
 
 **Status**: 강의 완료 ✅ | 실습 진행 중 🔄
