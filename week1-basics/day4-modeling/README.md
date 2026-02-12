@@ -22,21 +22,22 @@
 
 ### 강의
 
-- [ ] 01-15. Model Training (21분)
-- [ ] 01-16. Model Evaluation (29분)
-- [ ] 01-17. Model HyperParameter Tuning (12분)
-- [ ] 01-18. Model Selection (9분)
+- [x] 01-15. Model Training (21분)
+- [x] 01-16. Model Evaluation (29분)
+- [x] 01-17. Model HyperParameter Tuning (12분)
+- [x] 01-18. Model Selection (9분)
 
 ### 실습
 
-- [ ] 실습 1: 모델 학습 + `.pkl` 저장 (`train_model.py`)
-- [ ] 실습 2: 저장된 모델 로드 + 예측 (`predict.py`)
-- [ ] 실습 3: 3개 모델 비교 + 최고 모델 저장 (`compare_models.py`)
+- [x] 실습 0: joblib vs pickle 벤치마크 (`pickle_vs_joblib.py`)
+- [x] 실습 1: 모델 학습 + `.pkl` 저장 (`train_model.py`)
+- [x] 실습 2: 저장된 모델 로드 + 예측 (`predict.py`)
+- [x] 실습 3: 3개 모델 비교 + 최고 모델 저장 (`compare_models.py`)
 
 ### 정리
 
-- [ ] `notes/lecture_notes.md` 작성
-- [ ] `notes/practice_notes.md` 작성
+- [x] `notes/lecture_notes.md` 작성
+- [x] `notes/practice_notes.md` 작성
 
 ---
 
@@ -54,6 +55,7 @@ day4-modeling/
 │   ├── titanic_model.pkl    # 학습된 모델
 │   └── best_model.pkl       # 최고 성능 모델
 ├── src/
+│   ├── pickle_vs_joblib.py  # 실습 0 (벤치마크)
 │   ├── train_model.py       # 실습 1
 │   ├── predict.py           # 실습 2
 │   └── compare_models.py    # 실습 3
@@ -62,28 +64,30 @@ day4-modeling/
 
 ---
 
-## 핵심 개념 (강의 후 채우기)
+## 핵심 개념
 
 ### Model Training
 
-- Overfitting:
-- Train/Test Split:
-- random_state:
+- **Overfitting**: 학습 데이터에만 너무 맞춰져서 실제 데이터에서 성능 떨어짐
+- **Train/Test Split**: 학습용 80% / 평가용 20% 분리
+- **random_state**: 재현성을 위한 seed 고정 → config에서 통일 관리
 
 ### Model Evaluation
 
-- Accuracy vs F1-Score:
-- Precision / Recall:
-- 언제 어떤 지표를 쓰나:
+- **Accuracy vs F1-Score**: 불균형 데이터에서 Accuracy는 함정, F1-Score 사용
+- **Precision**: 내가 맞다고 한 것 중 진짜 맞은 비율 (FP 비용 클 때)
+- **Recall**: 전체 정답 중 맞춘 비율 (FN 비용 클 때 → 사기 탐지, 암 진단)
+- **평가 지표 선택**: 비즈니스 목적에 따라 달라짐
 
 ### HyperParameter Tuning
 
-- HyperParameter vs Parameter:
-- Tuning 방법:
+- **Parameter**: 모델이 학습하면서 자동으로 찾는 값 (가중치)
+- **HyperParameter**: 사람이 학습 전에 설정하는 값 (n_estimators, max_depth)
+- **Tuning 방법**: Grid Search (전체 탐색) → Random Search (빠름) → Bayesian (효율적)
 
 ### Model Selection
 
-- 선택 기준:
+- 성능(F1) + 속도(서빙) + 해석 가능성 + 데이터 크기 + 유지보수 종합 고려
 
 ---
 
@@ -96,101 +100,101 @@ joblib.dump()     = 빌드 아티팩트 저장
 model.pkl         = 배포할 파일
 joblib.load()     = 서버 시작 시 모델 로드
 predict()         = API response 반환
+compress=0        = Redis 캐시 (속도 우선)
+compress=3        = S3 장기 보관 (압축)
 ```
 
 ---
 
-## 실습 결과 (실습 후 채우기)
+## 실습 결과
+
+### joblib compress 벤치마크
+
+| compress | save   | load   | size   |
+| -------- | ------ | ------ | ------ |
+| 0        | 0.028s | 0.019s | 76.3MB |
+| 3        | 3.193s | 0.512s | 68.9MB |
+| 9        | 3.548s | 0.474s | 68.5MB |
+
+→ 서빙 환경: compress=0 / 스토리지 절약: compress=3
 
 ### 모델 성능 비교
 
-| 모델                | Accuracy | F1-Score |
-| ------------------- | -------- | -------- |
-| Logistic Regression |          |          |
-| Decision Tree       |          |          |
-| Random Forest       |          |          |
+| 모델                | Accuracy   | F1-Score   |
+| ------------------- | ---------- | ---------- |
+| Logistic Regression | 0.7933     | 0.7132     |
+| Decision Tree       | 0.8045     | 0.7407     |
+| **Random Forest**   | **0.8268** | **0.7597** |
 
 ### 최고 성능 모델
 
-- 모델명:
-- F1-Score:
-- 저장 경로: `outputs/best_model.pkl`
+- **모델명**: Random Forest
+- **F1-Score**: 0.7597
+- **저장 경로**: `outputs/best_model.pkl`
 
 ---
 
-## 오늘의 회고 (하루 끝나고 채우기)
+## 트러블슈팅
+
+### Feature Mismatch 에러
+
+**상황**: predict.py 실행 시 에러 발생
+
+```
+Feature names seen at fit time, yet now missing:
+- Embarked_C
+- Sex_female
+```
+
+**원인**: 학습(11개 컬럼) vs 예측 입력(8개 컬럼) 불일치
+
+**해결**:
+
+```python
+expected_cols = model.feature_names_in_
+for col in expected_cols:
+    if col not in new_passenger.columns:
+        new_passenger[col] = 0
+new_passenger = new_passenger[expected_cols]
+```
+
+**배운 것**: Day 3 get_dummies vs OneHotEncoder 직접 체감
+→ 프로덕션에서 OneHotEncoder 써야 하는 이유!
+
+---
+
+## Week 9 개선 예정 🔥
+
+```
+현재 F1: 0.7597
+
+개선 계획:
+- Name에서 호칭(Mr/Mrs/Master) 추출
+- 호칭별 Age 결측치 처리
+- SibSp + Parch → FamilySize 파생 변수
+
+예상 F1: 0.82~0.85
+스토리: "도메인 지식으로 성능 개선"
+```
+
+---
+
+## 오늘의 회고
 
 ### 배운 것
 
-1.
-2.
-3.
+1. joblib compress 트레이드오프 (속도 vs 용량)
+2. Feature Mismatch 에러 직접 체험 → OneHotEncoder 필요성 체감
+3. 평가 지표는 비즈니스 목적에 따라 달라짐
 
 ### 막혔던 부분
 
--
+- Feature Mismatch 에러 → model.feature*names_in*으로 해결
 
 ### 내일 연결
 
-- Day 5: Docker로 오늘 만든 모델 컨테이너화
+- Day 5: Docker로 오늘 만든 모델 컨테이너화 🐳
 
 ---
 
-**Last Updated**: 2026.02.12 | **Status**: 진행 중 🔄
-
-🔍 스스로 찾아보기 (약 1시간)
-
-검색 또는 GPT 활용 → practice_notes.md에 기록
-포트폴리오 "기술 선택 이유" 재료 수집!
-
-[VS] joblib vs pickle
-찾아볼 것:
-
-- 둘 다 모델 저장인데 왜 ML에서 joblib을 쓰나?
-- 속도 차이가 있나?
-- numpy array 포함된 객체에서 차이는?
-
-→ 나중에 README에:
-"모델 저장 시 joblib을 선택한 이유"로 활용!
-[WHAT IF] random_state 없애면?
-직접 실험:
-
-1. train_model.py에서 random_state=42 제거
-2. 3번 실행해서 accuracy 비교
-3. 결과가 매번 다른지 확인
-
-→ 재현성이 왜 중요한지 체감!
-→ 백엔드 연결: 테스트 환경 고정과 동일
-[WHY] F1-Score를 Accuracy보다 중요하게 보는 이유
-찾아볼 것:
-
-- Accuracy 90%인데 왜 나쁜 모델일 수 있나?
-- Precision vs Recall 트레이드오프
-- 실무에서 어떤 상황에 어떤 지표를 쓰나?
-
-힌트: Day 3 Class Imbalance와 연결됨!
-→ "95:5 불균형 데이터에서 Accuracy=95%의 함정"
-
-📝 오늘 practice_notes.md 추가할 것
-markdown## 실습 4: 모델 학습 & 평가
-
-### [VS] joblib vs pickle
-
-- 발견한 차이:
-- ML에서 joblib 쓰는 이유:
-- 포트폴리오 활용:
-
-### [WHAT IF] random_state 실험
-
-- random_state 있을 때 accuracy:
-- random_state 없을 때 (3회 실행):
-  - 1회:
-  - 2회:
-  - 3회:
-- 결론:
-
-### [WHY] F1-Score vs Accuracy
-
-- Accuracy의 함정:
-- 실무 선택 기준:
-- Day 3 Class Imbalance와 연결:
+**Last Updated**: 2026.02.12 | **Status**: 완료 ✅
