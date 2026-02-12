@@ -224,9 +224,9 @@ Day 3: Add class imbalance visualization
 kaggle competitions download -c titanic
 mv titanic.zip week1-basics/day3-data/data/titanic/
 unzip week1-basics/day3-data/data/titanic/titanic.zip
+```
 
-___
-
+---
 
 ## 업데이트 로그
 
@@ -243,4 +243,7 @@ ___
 ---
 
 **Last Updated**: 2026.02.11 | **Current**: Week 1 - Day 3 완료
+
+```
+
 ```
