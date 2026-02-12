@@ -4,8 +4,8 @@ import os
 
 
 BASE_DIR = os.path.dirname(__file__)
-file_path = os.path.join(BASE_DIR, 'titanic', 'train.csv')
-save_path = os.path.join(BASE_DIR, 'class_distribution.png')
+file_path = os.path.join(BASE_DIR, '..', 'titanic', 'train.csv')
+save_path = os.path.join(BASE_DIR, '..', 'class_distribution.png')
 
 
 df = pd.read_csv(file_path)
