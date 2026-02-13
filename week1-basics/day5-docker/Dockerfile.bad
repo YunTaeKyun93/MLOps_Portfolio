@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+WORKDIR /app
+
+
+COPY . .
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+CMD ["python", "src/predict.py"]
+
+#최초 빌드 docker build -t titanic-bad -f Dockerfile.bad .  0.18s user 0.13s system 0% cpu 32.798 total
+#docker build -t titanic-bad -f Dockerfile.bad .  0.19s user 0.17s system 1% cpu 33.156 total
+
+#docker build -t titanic-model .  0.11s user 0.07s system 39% cpu 0.467 total
+
+
+#REPOSITORY          TAG       IMAGE ID       CREATED         SIZE
+#titanic-no-ignore   latest    ddcec1ac4aaa   3 minutes ago   711MB
