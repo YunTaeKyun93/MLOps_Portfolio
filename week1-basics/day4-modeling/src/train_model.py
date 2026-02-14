@@ -54,6 +54,9 @@ print(classification_report(y_test, y_pred,
                              target_names=['Not Survived', 'Survived']))
 
 
+print("TRAIN FEATURE ORDER:")
+print(X.columns.tolist())
+
 # os.makedirs(MODEL_DIR, exist_ok= True)
 # model_path = os.path.join(MODEL_DIR, 'titanic_model.pkl')
 # joblib.dump(model, model_path)
