@@ -13,7 +13,9 @@ WORKDIR /app
 
 # 시스템 패키지 업데이트 (보안)
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \ 
     && rm -rf /var/lib/apt/lists/*
+# curl 설치(health 체크용)
 # apt-get update         = 패키지 목록 업데이트
 # --no-install-recommends = 추천 패키지 설치 안 함 (용량 절약)
 # rm -rf /var/lib/apt/lists/* = 캐시 삭제 (레이어 크기 줄이기)
@@ -53,6 +55,9 @@ COPY outputs/*.pkl ./outputs/
 EXPOSE 8000
 # 컨테이너가 8000 포트를 사용한다고 선언 (문서화 목적)
 # 실제 포트 매핑은 docker run -p 8000:8000 에서 함
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
 
 # 서버 실행
 # --host 0.0.0.0 : 외부 접근 허용 (중요!)
