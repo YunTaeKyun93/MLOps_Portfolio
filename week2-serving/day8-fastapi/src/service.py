@@ -20,7 +20,6 @@ from pydantic import BaseModel
 from contextlib import asynccontextmanager
 from typing import Optional
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
@@ -132,7 +131,7 @@ def predict_rating(user_id: int, movie_id: int) -> float:
 def health():
     return {
         "status": "OK",
-        "model_loded": len(model_store) > 0,
+        "model_loaded": len(model_store) > 0,
     }
 
 
