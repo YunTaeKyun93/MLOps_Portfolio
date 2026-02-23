@@ -1,8 +1,8 @@
-# 🎬 Movie Recommendation API
+# 🎬 Movie Recommendation API (Day11)
 
 Collaborative Filtering 기반 영화 추천 시스템을 FastAPI로 서빙하고 Docker로 컨테이너화한 프로젝트
 
-##  프로젝트 통합 배경
+## 프로젝트 통합 배경
 
 MLOps 학습 과정에서 Day 7~11에 걸쳐 단계별로 개발한 내용을 하나의 프로젝트로 통합했다.
 
@@ -17,13 +17,13 @@ MLOps 학습 과정에서 Day 7~11에 걸쳐 단계별로 개발한 내용을 �
 
 ## 기술 스택
 
-| 분류 | 기술 |
-|------|------|
-| API 서버 | FastAPI, Uvicorn |
-| ML | scikit-learn (cosine similarity), pandas |
-| 데이터 | MovieLens 100K |
-| 인프라 | Docker, Docker Compose |
-| 테스트 | pytest |
+| 분류     | 기술                                     |
+| -------- | ---------------------------------------- |
+| API 서버 | FastAPI, Uvicorn                         |
+| ML       | scikit-learn (cosine similarity), pandas |
+| 데이터   | MovieLens 100K                           |
+| 인프라   | Docker, Docker Compose                   |
+| 테스트   | pytest                                   |
 
 ## 아키텍처
 
@@ -56,11 +56,13 @@ project1-movie-recommend/
 ## 실행 방법
 
 ### Docker Compose (권장)
+
 ```bash
 docker compose up --build
 ```
 
 ### 로컬 실행
+
 ```bash
 pip install -r requirements.txt
 uvicorn src.service:app --host 0.0.0.0 --port 8000
@@ -69,7 +71,9 @@ uvicorn src.service:app --host 0.0.0.0 --port 8000
 ## 📡 API 명세
 
 ### GET /health
+
 서버 상태 확인
+
 ```json
 {
   "status": "OK",
@@ -78,9 +82,11 @@ uvicorn src.service:app --host 0.0.0.0 --port 8000
 ```
 
 ### POST /predict
+
 특정 유저의 특정 영화 예측 평점 반환
 
 **Request**
+
 ```json
 {
   "user_id": 1,
@@ -89,6 +95,7 @@ uvicorn src.service:app --host 0.0.0.0 --port 8000
 ```
 
 **Response**
+
 ```json
 {
   "user_id": 1,
@@ -99,15 +106,17 @@ uvicorn src.service:app --host 0.0.0.0 --port 8000
 ```
 
 ### GET /recommend/{user_id}?top_k=5
+
 유저에게 영화 top_k개 추천
 
 **Response**
+
 ```json
 {
   "user_id": 1,
   "recommendations": [
-    {"movie_id": 318, "predicted_rating": 4.85},
-    {"movie_id": 858, "predicted_rating": 4.72}
+    { "movie_id": 318, "predicted_rating": 4.85 },
+    { "movie_id": 858, "predicted_rating": 4.72 }
   ]
 }
 ```
