@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-recommender
+  namespace: ml-project
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: movie-recommender
+  template:
+    metadata:
+      labels:
+        app: movie-recommender
+    spec:
+      containers:
+        - name: movie-recommender
+          image: yuntaekyun/movie-recommend:v1.1
+          ports:
+            - containerPort: 8000

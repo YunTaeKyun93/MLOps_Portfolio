@@ -1,13 +1,10 @@
 import os
 import pickle
-import numpy as np
 from tqdm import tqdm
-from datasets import load_dataset
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
 import pandas as pd
 
 
