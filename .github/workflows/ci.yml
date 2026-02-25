@@ -21,6 +21,13 @@ jobs:
           pip install -r week2-serving/day8-fastapi/requirements.txt
           pip install pytest httpx
 
+      - name: 모델 학습
+        working-directory: week2-serving/day7-cf-recommender
+        run: python src/train.py
+
+      - name: pkl 복사
+        run: cp week2-serving/day7-cf-recommender/outputs/*.pkl week2-serving/day8-fastapi/outputs/
+
       - name: 테스트 실행
         working-directory: week2-serving/day8-fastapi
         run: pytest test_service.py -v
