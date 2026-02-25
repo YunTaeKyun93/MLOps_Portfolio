@@ -18,6 +18,7 @@ jobs:
 
       - name: 패키지 설치
         run: |
+          pip install -r week2-serving/day7-cf-recommender/requirements.txt
           pip install -r week2-serving/day8-fastapi/requirements.txt
           pip install pytest httpx
 
