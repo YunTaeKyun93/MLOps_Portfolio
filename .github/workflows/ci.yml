@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v3
+      - name: Python 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: 패키지 설치
+        run: |
+          pip install -r week2-serving/day7-cf-recommender/requirements.txt
+          pip install -r week2-serving/day8-fastapi/requirements.txt
+          pip install pytest httpx
+
+      - name: 데이터 다운로드
+        working-directory: week2-serving/day7-cf-recommender
+        run: |
+          mkdir -p data/ml-1m
+          curl -O https://files.grouplens.org/datasets/movielens/ml-1m.zip
+          unzip ml-1m.zip -d data/
+
+      - name: 모델 학습
+        working-directory: week2-serving/day7-cf-recommender
+        run: python src/train.py
+
+      - name: outputs 폴더 생성
+        run: mkdir -p week2-serving/day8-fastapi/outputs
+
+      - name: pkl 복사
+        run: cp week2-serving/day7-cf-recommender/outputs/*.pkl week2-serving/day8-fastapi/outputs/
+
+      - name: 테스트 실행
+        working-directory: week2-serving/day8-fastapi
+        run: pytest test_service.py -v
