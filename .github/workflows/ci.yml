@@ -33,6 +33,9 @@ jobs:
         working-directory: week2-serving/day7-cf-recommender
         run: python src/train.py
 
+      - name: outputs 폴더 생성
+        run: mkdir -p week2-serving/day8-fastapi/outputs
+
       - name: pkl 복사
         run: cp week2-serving/day7-cf-recommender/outputs/*.pkl week2-serving/day8-fastapi/outputs/
 
