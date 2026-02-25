@@ -22,6 +22,13 @@ jobs:
           pip install -r week2-serving/day8-fastapi/requirements.txt
           pip install pytest httpx
 
+      - name: 데이터 다운로드
+        working-directory: week2-serving/day7-cf-recommender
+        run: |
+          mkdir -p data/ml-1m
+          curl -O https://files.grouplens.org/datasets/movielens/ml-1m.zip
+          unzip ml-1m.zip -d data/
+
       - name: 모델 학습
         working-directory: week2-serving/day7-cf-recommender
         run: python src/train.py
