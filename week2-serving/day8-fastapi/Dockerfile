@@ -65,3 +65,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
 CMD ["uvicorn", "src.service:app", "--host", "0.0.0.0", "--port", "8000"]
 # CMD = 컨테이너 실행 시 기본 명령어
 # 0.0.0.0 = 모든 IP에서 접근 허용 (localhost만 쓰면 외부 접근 안 됨!)
+
+
