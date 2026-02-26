@@ -323,4 +323,4 @@ Day 8: Add lecture notes for MLOps concepts
 
 ---
 
-**Last Updated**: 2026.02.18 | **Current**: Week 2 - Day 8 완료
+**Last Updated**: 2026.02.18 | **Current**: Week 2 - Day 8 완료test
