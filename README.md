@@ -36,13 +36,13 @@ Phase 4 (Week 9-12): 취업 준비       ░░░░░░░░░░   0%
 
 ### Week 2 상세
 
-| Day   | 주제                            | 상태    |
-| ----- | ------------------------------- | ------- |
-| Day 6 | BentoML 모델 서빙               | ✅ 완료 |
-| Day 7 | CF 추천 시스템 + BentoML        | ✅ 완료 |
-| Day 8 | FastAPI 서빙 + Docker           | ✅ 완료 |
-| Day 9 | MLOps 전체 그림                 | ⏳ 예정 |
-| Day 10| Docker 최적화                   | ⏳ 예정 |
+| Day    | 주제                     | 상태    |
+| ------ | ------------------------ | ------- |
+| Day 6  | BentoML 모델 서빙        | ✅ 완료 |
+| Day 7  | CF 추천 시스템 + BentoML | ✅ 완료 |
+| Day 8  | FastAPI 서빙 + Docker    | ✅ 완료 |
+| Day 9  | MLOps 전체 그림          | ⏳ 예정 |
+| Day 10 | Docker 최적화            | ⏳ 예정 |
 
 ---
 
@@ -88,8 +88,9 @@ Phase 4 (Week 9-12): 취업 준비       ░░░░░░░░░░   0%
 ### ✅ Week 2: 서빙 + Docker
 
 **Day 7: CF 추천 시스템**
+
 ```
-산출물: 
+산출물:
 - train.py (CF 알고리즘 학습)
 - service.py (BentoML API)
 - user_item_matrix.pkl, user_similarity.pkl
@@ -99,6 +100,7 @@ Phase 4 (Week 9-12): 취업 준비       ░░░░░░░░░░   0%
 ```
 
 **Day 8: FastAPI + Docker**
+
 ```
 산출물:
 - service.py (FastAPI 서버)
@@ -185,7 +187,7 @@ MLOps_Portfolio/
 │   ├── day9-mlops-concept/    # MLOps 전체 그림 (예정)
 │   └── day10-optimization/    # Docker 최적화 (예정)
 │
-├── week3-kubernetes/           # Week 3: K8s (예정)
+├── week3-kubernetes/           # Week 3: K8s (진행)
 ├── week4-cloud/                # Week 4: AWS (예정)
 ├── week5-pipeline/             # Week 5: Airflow (예정)
 ├── week6-mlflow/               # Week 6: MLflow (예정)
@@ -215,26 +217,31 @@ MLOps_Portfolio/
 ### Week 1: Python + ML 기초
 
 **Day 1-2: 환경 설정 + PyTorch**
+
 - Miniconda, VS Code 설정
 - PyTorch 기초 (텐서, DataLoader)
 - MNIST 학습
 
 **Day 3: 데이터 전처리**
+
 - pandas 전처리
 - Class Imbalance 처리
 - One-Hot Encoding
 
 **Day 4: 모델 학습**
+
 - Titanic 데이터 학습
 - RandomForest, Logistic Regression
 - best_model.pkl 저장
 
 **Day 5: Docker 기초**
+
 - Dockerfile 작성
 - 이미지 빌드 & 실행
 - 레이어 캐싱 최적화
 
 **Day 6: BentoML 서빙**
+
 - ModelStore 개념
 - service.py 작성
 - API 서버 실행 (localhost:3000)
@@ -242,6 +249,7 @@ MLOps_Portfolio/
 ### Week 2: FastAPI + Docker
 
 **Day 7: CF 추천 시스템**
+
 - Collaborative Filtering 알고리즘
 - User-Item Matrix 생성
 - 코사인 유사도 계산
@@ -249,12 +257,14 @@ MLOps_Portfolio/
 - Accuracy: 38.2%
 
 **Ch2 개념 강의:**
+
 - Matrix Factorization
 - SVD, ALS
 - KNN (벡터 검색 → RAG 연결)
 - Neural Collaborative Filtering
 
 **Day 8: FastAPI + Docker**
+
 - BentoML → FastAPI 전환
 - Path/Query Parameter
 - lifespan (서버 시작 시 모델 로드)
@@ -262,6 +272,7 @@ MLOps_Portfolio/
 - GET /recommend/{user_id} 구현
 
 **MLOps 개념:**
+
 - ML Lifecycle (순환 구조)
 - ML System vs MLOps
 - 배포 → 모니터링 → 재학습
@@ -270,17 +281,17 @@ MLOps_Portfolio/
 
 ## 백엔드 개발자 관점 연결
 
-| ML 개념 | 백엔드 개념 |
-|---------|-----------|
-| FastAPI service.py | NestJS Controller + Service |
-| Pydantic BaseModel | DTO |
-| lifespan | onModuleInit() |
-| Path/Query Parameter | @Param() / @Query() |
-| pickle | 모델 직렬화 저장 |
-| BentoML Runner | 모델 실행 엔진 |
-| Docker | 실행 환경 패키징 |
-| User-Item Matrix | DB JOIN 결과 (Sparse) |
-| Collaborative Filtering | 유사 사용자 기반 추천 |
+| ML 개념                 | 백엔드 개념                 |
+| ----------------------- | --------------------------- |
+| FastAPI service.py      | NestJS Controller + Service |
+| Pydantic BaseModel      | DTO                         |
+| lifespan                | onModuleInit()              |
+| Path/Query Parameter    | @Param() / @Query()         |
+| pickle                  | 모델 직렬화 저장            |
+| BentoML Runner          | 모델 실행 엔진              |
+| Docker                  | 실행 환경 패키징            |
+| User-Item Matrix        | DB JOIN 결과 (Sparse)       |
+| Collaborative Filtering | 유사 사용자 기반 추천       |
 
 ---
 
@@ -307,15 +318,15 @@ Day 8: Add lecture notes for MLOps concepts
 
 ## 업데이트 로그
 
-| 날짜       | 내용                                        |
-| ---------- | ------------------------------------------- |
-| 2026.02.06 | 프로젝트 시작                               |
-| 2026.02.10 | Day 1-2 완료 (환경 설정, PyTorch)          |
-| 2026.02.11 | Day 3 완료 (데이터 전처리)                  |
-| 2026.02.12 | Day 4-5 완료 (모델 학습, Docker)            |
-| 2026.02.13 | Day 6 완료 (BentoML 서빙)                   |
-| 2026.02.16 | Day 7 완료 (CF 추천 시스템)                 |
-| 2026.02.18 | Day 8 완료 (FastAPI + Docker)               |
+| 날짜       | 내용                              |
+| ---------- | --------------------------------- |
+| 2026.02.06 | 프로젝트 시작                     |
+| 2026.02.10 | Day 1-2 완료 (환경 설정, PyTorch) |
+| 2026.02.11 | Day 3 완료 (데이터 전처리)        |
+| 2026.02.12 | Day 4-5 완료 (모델 학습, Docker)  |
+| 2026.02.13 | Day 6 완료 (BentoML 서빙)         |
+| 2026.02.16 | Day 7 완료 (CF 추천 시스템)       |
+| 2026.02.18 | Day 8 완료 (FastAPI + Docker)     |
 
 ---
 
