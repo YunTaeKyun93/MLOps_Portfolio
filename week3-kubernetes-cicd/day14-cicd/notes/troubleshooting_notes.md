@@ -1,4 +1,4 @@
-# Day 15 - GitHub Actions CI 트러블슈팅
+# Day 14 - GitHub Actions CI 트러블슈팅
 
 ## 발생한 문제들
 

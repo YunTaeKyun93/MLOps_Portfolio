@@ -1,4 +1,4 @@
-# Day 16 실습 노트 - GitHub Actions CD + Docker Hub 자동 푸시
+# Day 15 실습 노트 - GitHub Actions CD + Docker Hub 자동 푸시
 
 **날짜**: 2026.02.26
 **목표**: CI/CD 파이프라인에 Docker Hub 자동 빌드 & 푸시 추가
