@@ -166,3 +166,5 @@ plt.show()
 - **내일 연결**: Week 3 마무리 + 블로그 #1 작성 시작
 
 ---
+
+git push origin feat/da17-eda-visualization
