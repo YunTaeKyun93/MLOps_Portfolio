@@ -106,7 +106,7 @@ valid_ratings = movie_ratings[valid_mask]
 valid_sims = user_sim[valid_mask]
 
 
-# movie_ratings  = 모드 사용자들의 해당 영화 평점
+# movie_ratings  = 모든 사용자들의 해당 영화 평점
 # user_sim  = 현재 사용자와 모든 사용자의 유사도
 # valid_mask = 해당 영화를 본 사용자 만 필터
 # valid_ratings = 영화 i를 본 사용자들의 평점
