@@ -70,13 +70,6 @@ app = FastAPI(
 )
 
 
-# ─────────────────────────────────────────────
-# DTO 정의 (Pydantic BaseModel)
-#
-# [백엔드 관점]
-# NestJS의 DTO와 완전히 동일한 개념
-# class PredictDto { user_id: number; movie_id: number }
-# ───
 
 
 class PredictRequest(BaseModel):
