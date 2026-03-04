@@ -31,8 +31,9 @@ jobs:
 
       - name: 모델 학습
         working-directory: project1-movie-recommend
-        run: python src/train.py
-
+        run: |
+          rm -f outputs/best_acc.txt
+          python src/train.py
       - name: 테스트 실행
         working-directory: project1-movie-recommend
         run: pytest test_service.py -v
