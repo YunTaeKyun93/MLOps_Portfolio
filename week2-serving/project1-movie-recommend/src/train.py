@@ -13,6 +13,7 @@ DATA_PATH = os.path.join(BASE_DIR, "data", "ml-1m", "ratings.dat")
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 
 
+
 def load_data(data_path: str) -> pd.DataFrame:
     df = pd.read_csv(
         data_path,

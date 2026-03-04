@@ -32,10 +32,8 @@ EXPECTED_COLUMNS = [
 ]
 
 # Service 정의
-svc = bentoml.Service('titanic_service', runners=[runner])
-# titanic_service라는 서비스를 만든다 이 서비스가 사용할 runner들을 등록한다
-@svc.api(input=JSON(), output=JSON())
-# API로 외부에 공개하는데 입출력 형태는 Json형식
+svc = bentoml.Service('titanic_service', runners=[runner]) # titanic_service라는 서비스를 만든다 이 서비스가 사용할 runner들을 등록한다
+@svc.api(input=JSON(), output=JSON())# API로 외부에 공개하는데 입출력 형태는 Json형식
 async def predict(input_data)-> dict:
   # 입력 데이터 → DataFrame 변환
   features = pd.DataFrame([input_data])

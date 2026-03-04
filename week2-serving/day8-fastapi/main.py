@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.services.recommend import load_models, model_store
 from app.routers.recommend import router
-
+from settings import settings
 @asynccontextmanager
 async def lifespan(app:FastAPI):
   load_models()
@@ -24,3 +24,9 @@ app = FastAPI(
 
 
 app.include_router(router)
+
+
+if __name__ =="__main__":
+  import uvicorn
+
+  uvicorn.run('main:app', host=settings.server_host, port=settings.server_port)

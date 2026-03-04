@@ -1,19 +1,17 @@
 import os
 import pickle
-import numpy as np
 from tqdm import tqdm
-from datasets import load_dataset
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
 import pandas as pd
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "ml-1m", "ratings.dat")
-OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
+OUTPUT_DIR = os.path.join(BASE_DIR, "..", "day8-fastapi", "outputs")
+BEST_ACC_PATH = os.path.join(OUTPUT_DIR, "best_acc.txt")
 
 
 def load_data(data_path: str) -> pd.DataFrame:
@@ -81,13 +79,24 @@ def evaluate(test_df, matrix, sim_df):
     return acc
 
 
-def save_model(matrix, sim_df):
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(os.path.join(OUTPUT_DIR, "user_item_matrix.pkl"), "wb") as f:
-        pickle.dump(matrix, f)
-    with open(os.path.join(OUTPUT_DIR, "user_similarity.pkl"), "wb") as f:
-        pickle.dump(sim_df, f)
-    print("💾 저장 완료!")
+def save_model(matrix, sim_df, acc):
+  if os.path.exists(BEST_ACC_PATH):
+      with open(BEST_ACC_PATH, "r") as f:
+          best_acc = float(f.read())
+  else : best_acc = 0.0
+
+  if acc > best_acc:
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        with open(os.path.join(OUTPUT_DIR, "user_item_matrix.pkl"), "wb") as f:
+            pickle.dump(matrix, f)
+        with open(os.path.join(OUTPUT_DIR, "user_similarity.pkl"), "wb") as f:
+            pickle.dump(sim_df, f)
+        with open(BEST_ACC_PATH, "w") as f:
+            f.write(str(acc))
+        print(f"💾 새 모델 저장! ({best_acc:.4f} → {acc:.4f})")
+  else:
+        print(f"⏭️ 기존 모델 유지 (best: {best_acc:.4f} >= 현재: {acc:.4f})")
+      
 
 
 df = load_data(data_path=DATA_PATH)
@@ -101,4 +110,4 @@ print(f"유저 1의 영화 1193 예측 평점: {result:.2f}")
 
 
 acc = evaluate(test_df, matrix, sim_df)
-save_model(matrix, sim_df)
+save_model(matrix, sim_df, acc)

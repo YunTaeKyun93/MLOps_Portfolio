@@ -5,7 +5,6 @@ from fastapi import HTTPException
 model_store ={}
 
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
 

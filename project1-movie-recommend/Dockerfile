@@ -38,6 +38,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # ─────────────────────────────────────────────
 # 소스 코드 복사
 COPY src/ ./src/
+COPY app/ ./app/
+COPY main.py .
 # 로컬 src/ 폴더를 컨테이너 /app/src/로 복사
 
 # ─────────────────────────────────────────────
@@ -62,7 +64,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
 # 서버 실행
 # --host 0.0.0.0 : 외부 접근 허용 (중요!)
 # --port 8000    : 컨테이너 내부 포트
-CMD ["uvicorn", "src.service:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 # CMD = 컨테이너 실행 시 기본 명령어
 # 0.0.0.0 = 모든 IP에서 접근 허용 (localhost만 쓰면 외부 접근 안 됨!)
 
