@@ -58,3 +58,15 @@ jobs:
           tags: |
             947632012584.dkr.ecr.ap-northeast-2.amazonaws.com/movie-recommend:${{ github.sha }}
             947632012584.dkr.ecr.ap-northeast-2.amazonaws.com/movie-recommend:latest
+      - name: K8s 배포
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          mkdir -p ~/.kube
+          echo "$KUBE_CONFIG" | base64 --decode > ~/.kube/config
+          curl -LO "https://dl.k8s.io/release/v1.34.1/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+          kubectl set image deployment/movie-recommend \
+            movie-recommend=947632012584.dkr.ecr.ap-northeast-2.amazonaws.com/movie-recommend:${{ github.sha }} \
+            --kubeconfig ~/.kube/config || true

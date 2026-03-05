@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-recommend
+
+spec:
+  selector:
+    app: movie-recommend
+  ports:
+    - port: 80
+      targetPort: 8000
+  type: NodePort
