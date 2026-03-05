@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: movie-recommend
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: movie-recommend
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  template:
+    metadata:
+      labels:
+        app: movie-recommend
+    spec:
+      containers:
+        - name: movie-recommend
+          image: movie-recommend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
