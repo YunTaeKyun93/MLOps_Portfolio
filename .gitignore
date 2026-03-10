@@ -5,9 +5,9 @@ env/
 ENV/
 
 # Python
-__pycache__/
 *.pyc
 .ipynb_checkpoints/
+**/__pycache__/
 
 # Data (git에 올리지 않음)
 data/
@@ -23,3 +23,7 @@ week2-serving/day7-cf-recommender/outputs/
 outputs/*.pkl
 week2-serving/day7-cf-recommender/data/
 week2-serving/day7-cf-recommender/outputs/
+
+
+**/logs/
+**/plugins/
