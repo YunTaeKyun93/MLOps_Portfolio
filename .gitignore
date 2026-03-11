@@ -23,3 +23,5 @@ week2-serving/day7-cf-recommender/outputs/
 outputs/*.pkl
 week2-serving/day7-cf-recommender/data/
 week2-serving/day7-cf-recommender/outputs/
+
+**/logs/

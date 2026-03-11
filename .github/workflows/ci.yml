@@ -3,6 +3,8 @@ name: CI
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "project1-movie-recommend"
 
 jobs:
   test:
