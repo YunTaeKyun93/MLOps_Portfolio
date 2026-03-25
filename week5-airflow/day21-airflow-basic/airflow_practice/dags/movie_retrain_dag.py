@@ -5,7 +5,16 @@ from datetime import datetime, timedelta
 from surprise import SVD, Dataset, Reader, accuracy
 from surprise.model_selection import train_test_split
 
+import mlflow
+import mlflow.sklearn
+
 from airflow.decorators import dag, task
+
+# MLflow 트래킹 서버 주소
+# 로컬: http://host.docker.internal:5001 (Docker 내부에서 호스트 접근)
+MLFLOW_TRACKING_URI = "http://172.19.0.2:5001"
+MLFLOW_EXPERIMENT_NAME = "movie-recommend-svd"
+
 
 @dag(
     dag_id="movie_retrain",
@@ -43,38 +52,67 @@ def movie_retrain_pipeline():
         df["userId"] = df["userId"].astype(int)
         df["movieId"] = df["movieId"].astype(int)
         df["rating"] = df["rating"].astype(float)
-
         df = df[df["rating"].between(0.5, 5.0)]
-
         df = df.drop_duplicates(subset=["userId", "movieId"])
 
         print(f"전처리 완료: {len(df)}행")
         return df.to_dict(orient="records")
 
-
     @task
     def train_model(clean_data: list):
         df = pd.DataFrame(clean_data)
+
+        # 하이퍼파라미터 정의 (MLflow log_param용으로 변수로 분리)
+        n_factors = 50
+        n_epochs = 20
+        test_size = 0.2
 
         reader = Reader(rating_scale=(0.5, 5.0))
         dataset = Dataset.load_from_df(
             df[["userId", "movieId", "rating"]], reader
         )
+        trainset, testset = train_test_split(dataset, test_size=test_size)
 
-        trainset, testset = train_test_split(dataset, test_size=0.2)
-
-        model = SVD(n_factors=50, n_epochs=20)
+        model = SVD(n_factors=n_factors, n_epochs=n_epochs)
         model.fit(trainset)
 
         predictions = model.test(testset)
         rmse = accuracy.rmse(predictions)
 
+        # ─────────────────────────────────────────────
+        # MLflow 실험 기록
+        # with mlflow.start_run() = 하나의 실험 단위 (Git commit 개념)
+        # 블록 안에서 기록한 param/metric/artifact가 하나의 Run으로 묶임
+        # ─────────────────────────────────────────────
+        mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+        mlflow.set_experiment(MLFLOW_EXPERIMENT_NAME)
+
+        with mlflow.start_run(run_name=f"svd-{datetime.now().strftime('%Y%m%d-%H%M')}"):
+
+            # 하이퍼파라미터 기록 (학습 설정값)
+            mlflow.log_param("n_factors", n_factors)
+            mlflow.log_param("n_epochs", n_epochs)
+            mlflow.log_param("test_size", test_size)
+            mlflow.log_param("data_size", len(df))
+
+            # 성능 지표 기록
+            mlflow.log_metric("rmse", rmse)
+
+            # 커스텀 태그 (실험 메타데이터)
+            mlflow.set_tag("model_type", "SVD")
+            mlflow.set_tag("data_source", "movielens")
+            mlflow.set_tag("triggered_by", "airflow")
+
+            print(f"✅ MLflow 실험 기록 완료 | RMSE: {rmse:.4f}")
+
         print(f"모델 학습 완료 | RMSE: {rmse:.4f}")
 
         model_bytes = pickle.dumps(model)
         return {
-            "model": model_bytes.hex(),  # bytes → hex string
-            "rmse": rmse
+            "model": model_bytes.hex(),
+            "rmse": rmse,
+            "n_factors": n_factors,
+            "n_epochs": n_epochs,
         }
 
     @task
@@ -93,21 +131,29 @@ def movie_retrain_pipeline():
                 best_rmse = float(f.read().strip())
             print(f"이전 RMSE: {best_rmse:.4f} | 새 RMSE: {new_rmse:.4f}")
         else:
-            best_rmse = float("inf")  # 처음이면 무조건 저장
+            best_rmse = float("inf")
             print(f"첫 학습 | 새 RMSE: {new_rmse:.4f}")
 
-        # 성능 비교 후 저장
         if new_rmse < best_rmse:
             with open(model_path, "wb") as f:
                 pickle.dump(model, f)
             with open(rmse_path, "w") as f:
                 f.write(str(new_rmse))
-            print(f"✅ 새 모델 저장! RMSE {best_rmse:.4f} → {new_rmse:.4f}")
-            return {"saved": True, "rmse": new_rmse}
+
+            mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+            mlflow.set_experiment(MLFLOW_EXPERIMENT_NAME)
+
+            with mlflow.start_run(run_name=f"best-model-{datetime.now().strftime('%Y%m%d-%H%M')}"):
+                mlflow.log_metric("rmse", new_rmse)
+                mlflow.log_metric("rmse_improvement", best_rmse - new_rmse)
+                mlflow.set_tag("status", "production_candidate")
+                # mlflow.log_artifact 제거
+                print(f"✅ 새 모델 MLflow 등록 완료! RMSE {best_rmse:.4f} → {new_rmse:.4f}")
+
+                return {"saved": True, "rmse": new_rmse}
         else:
             print(f"❌ 기존 모델 유지. RMSE {new_rmse:.4f} >= {best_rmse:.4f}")
             return {"saved": False, "rmse": new_rmse}
-
 
     raw = load_data()
     cleaned = preprocess(raw)
