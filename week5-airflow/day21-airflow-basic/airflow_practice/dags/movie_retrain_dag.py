@@ -4,13 +4,12 @@ import pandas as pd
 from datetime import datetime, timedelta
 from surprise import SVD, Dataset, Reader, accuracy
 from surprise.model_selection import train_test_split
-
 import mlflow
 import mlflow.sklearn
 
 from airflow.decorators import dag, task
 
-# MLflow 트래킹 서버 주소
+
 # 로컬: http://host.docker.internal:5001 (Docker 내부에서 호스트 접근)
 MLFLOW_TRACKING_URI = "http://172.19.0.2:5001"
 MLFLOW_EXPERIMENT_NAME = "movie-recommend-svd"
@@ -147,8 +146,13 @@ def movie_retrain_pipeline():
                 mlflow.log_metric("rmse", new_rmse)
                 mlflow.log_metric("rmse_improvement", best_rmse - new_rmse)
                 mlflow.set_tag("status", "production_candidate")
-                # mlflow.log_artifact 제거
-                print(f"✅ 새 모델 MLflow 등록 완료! RMSE {best_rmse:.4f} → {new_rmse:.4f}")
+                
+                mlflow.sklearn.log_model(
+                    sk_model=model,
+                    artifact_path="model",
+                    registered_model_name="svd-movie-recommend"
+                )
+                print(f"새 모델 MLflow 등록 완료! RMSE {best_rmse:.4f} → {new_rmse:.4f}")
 
                 return {"saved": True, "rmse": new_rmse}
         else:
