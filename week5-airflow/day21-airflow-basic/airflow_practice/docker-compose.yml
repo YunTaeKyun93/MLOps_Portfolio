@@ -49,5 +49,23 @@ services:
       - airflow-db:/opt/airflow
     command: scheduler
 
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    container_name: mlflow_server
+    environment:
+      - MLFLOW_ALLOW_FILE_URI_AS_MODEL_VERSION_SOURCE=true
+      - GUNICORN_CMD_ARGS=--forwarded-allow-ips=*
+    ports:
+      - "5001:5001"
+    volumes:
+      - mlflow-data:/mlflow
+    command: >-
+      mlflow server --host 0.0.0.0 --port 5001
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+
 volumes:
   airflow-db:
+  mlflow-data:
