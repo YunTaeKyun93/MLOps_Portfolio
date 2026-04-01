@@ -7,3 +7,4 @@ tqdm
 datasets
 fastapi
 uvicorn
+prometheus-fastapi-instrumentator
