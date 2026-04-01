@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.services.recommend import load_models, model_store
 from app.routers.recommend import router
+from prometheus_fastapi_instrumentator import Instrumentator
+
 @asynccontextmanager
 async def lifespan(app:FastAPI):
   load_models()
@@ -20,6 +22,7 @@ app = FastAPI(
   lifespan=lifespan
 )
 
+Instrumentator().instrument(app).expose(app)
 
 
 app.include_router(router)
