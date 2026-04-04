@@ -1,17 +1,17 @@
 import os
 import pickle
+import numpy as np
 from tqdm import tqdm
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.metrics import accuracy_score
 import pandas as pd
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "ml-1m", "ratings.dat")
 OUTPUT_DIR = os.path.join(BASE_DIR, "outputs")
-BEST_ACC_PATH = os.path.join(OUTPUT_DIR, "best_acc.txt")
+BEST_RMSE_PATH = os.path.join(OUTPUT_DIR, "best_rmse.txt")  # ← acc → rmse로 변경
 
 
 def load_data(data_path: str) -> pd.DataFrame:
@@ -23,7 +23,7 @@ def load_data(data_path: str) -> pd.DataFrame:
     )
     df = df[["user_id", "movie_id", "user_rating"]]
     print(
-        f"✅ 로딩 완료: {len(df):,}건 | 사용자 {df['user_id'].nunique():,}명 | 영화 {df['movie_id'].nunique():,}개"
+        f"로딩 완료: {len(df):,}건 | 사용자 {df['user_id'].nunique():,}명 | 영화 {df['movie_id'].nunique():,}개"
     )
     return df
 
@@ -38,10 +38,8 @@ def build_matrix(df: pd.DataFrame):
 
 def compute_similarity(matrix):
     sparse = csr_matrix(matrix.fillna(0))
-
     sim = cosine_similarity(sparse)
     sim_df = pd.DataFrame(sim, index=matrix.index, columns=matrix.index)
-
     print(f"✅ Similarity Matrix shape: {sim_df.shape}")
     return sim_df
 
@@ -73,30 +71,31 @@ def evaluate(test_df, matrix, sim_df):
         predictions.append(pred)
         true_ratings.append(row["user_rating"])
 
-    rounded = [round(x) for x in predictions]
-    acc = accuracy_score(true_ratings, rounded)
-    print(f"✅ Accuracy: {acc * 100:.1f}%")
-    return acc
+
+    rmse = np.sqrt(np.mean((np.array(predictions) - np.array(true_ratings)) ** 2))
+    print(f"✅ RMSE: {rmse:.4f}")
+    return rmse
 
 
-def save_model(matrix, sim_df, acc):
-  if os.path.exists(BEST_ACC_PATH):
-      with open(BEST_ACC_PATH, "r") as f:
-          best_acc = float(f.read())
-  else : best_acc = 0.0
+def save_model(matrix, sim_df, rmse):
+    if os.path.exists(BEST_RMSE_PATH):
+        with open(BEST_RMSE_PATH, "r") as f:
+            best_rmse = float(f.read())
+    else:
+        best_rmse = float("inf")  
 
-  if acc > best_acc:
+
+    if rmse < best_rmse:
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         with open(os.path.join(OUTPUT_DIR, "user_item_matrix.pkl"), "wb") as f:
             pickle.dump(matrix, f)
         with open(os.path.join(OUTPUT_DIR, "user_similarity.pkl"), "wb") as f:
             pickle.dump(sim_df, f)
-        with open(BEST_ACC_PATH, "w") as f:
-            f.write(str(acc))
-        print(f"💾 새 모델 저장! ({best_acc:.4f} → {acc:.4f})")
-  else:
-        print(f"⏭️ 기존 모델 유지 (best: {best_acc:.4f} >= 현재: {acc:.4f})")
-      
+        with open(BEST_RMSE_PATH, "w") as f:
+            f.write(str(rmse))
+        print(f"새 모델 저장! RMSE ({best_rmse:.4f} → {rmse:.4f})")
+    else:
+        print(f" 기존 모델 유지 (best: {best_rmse:.4f} <= 현재: {rmse:.4f})")
 
 
 df = load_data(data_path=DATA_PATH)
@@ -104,10 +103,8 @@ train_df, test_df = train_test_split(df, test_size=0.02, random_state=42)
 matrix = build_matrix(train_df)
 sim_df = compute_similarity(matrix=matrix)
 
-
 result = predict_rating(1, 1193, matrix, sim_df)
 print(f"유저 1의 영화 1193 예측 평점: {result:.2f}")
 
-
-acc = evaluate(test_df, matrix, sim_df)
-save_model(matrix, sim_df, acc)
+rmse = evaluate(test_df, matrix, sim_df)
+save_model(matrix, sim_df, rmse)
