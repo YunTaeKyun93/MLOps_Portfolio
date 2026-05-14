@@ -237,6 +237,52 @@ day8-fastapi/
 
 ---
 
+## 트러블슈팅
+
+### 버그 1 — 음수 유사도 미필터링
+
+**원인**
+User-Based CF에서 유사도는 코사인 유사도로 계산되며 `-1 ~ 1` 범위를 가진다. 음수 유사도는 "반대 취향 유저"를 의미하는데, `valid_mask = movie_ratings.notna()` 조건만으로는 이들을 걸러내지 못한다.
+
+**증상**
+가중 평균 분모 `valid_sims.sum()`이 양수여도 개별 음수 유사도가 포함된 채로 예측이 계산되어 평점 범위(1~5)를 벗어나는 값이 반환될 수 있다.
+
+예시: `user_sim = [-0.8, 0.6, 0.4]`, `ratings = [5, 1, 1]`
+→ 수정 전: `(-0.8×5 + 0.6×1 + 0.4×1) / 0.2 = -15.0`
+→ 수정 후: `(0.6×1 + 0.4×1) / 1.0 = 1.0`
+
+**수정** (`src/service.py`)
+```python
+# 수정 전
+valid_sims = user_sim[valid_mask]
+
+# 수정 후
+positive_mask = valid_sims > 0
+valid_sims = valid_sims[positive_mask]
+valid_ratings = valid_ratings[positive_mask]
+```
+
+---
+
+### 버그 2 — 자기 자신 포함 (Information Leakage)
+
+**원인**
+`matrix[movie_id]`는 모든 유저의 평점을 담은 Series인데, `valid_mask = movie_ratings.notna()`가 예측 대상 유저(`user_id`) 본인도 포함한다. 예측 대상 유저가 해당 영화에 이미 평점을 남긴 경우, 그 평점이 예측 계산에 사용된다.
+
+**증상**
+예측값이 실제 평점 방향으로 편향된다. 모델 평가 시 RMSE가 실제보다 낮게 측정되는 데이터 누수(leakage)가 발생한다.
+
+**수정** (`src/service.py`)
+```python
+# 수정 전
+valid_mask = movie_ratings.notna()
+
+# 수정 후
+valid_mask = movie_ratings.notna() & (movie_ratings.index != user_id)
+```
+
+---
+
 ## 다음 단계
 
 - Day 9: MLOps 개념 정리
