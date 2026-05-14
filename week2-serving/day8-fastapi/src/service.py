@@ -105,9 +105,13 @@ def predict_rating(user_id: int, movie_id: int) -> float:
 
     movie_ratings = matrix[movie_id]
     user_sim = sim_df.loc[user_id]
-    valid_mask = movie_ratings.notna()
+    valid_mask = movie_ratings.notna() & (movie_ratings.index != user_id)
     valid_sims = user_sim[valid_mask]
     valid_ratings = movie_ratings[valid_mask]
+
+    positive_mask = valid_sims > 0
+    valid_sims = valid_sims[positive_mask]
+    valid_ratings = valid_ratings[positive_mask]
 
     if valid_sims.sum() > 0:
         return float((valid_sims * valid_ratings).sum() / valid_sims.sum())
